@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: smartbet-ai
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn sports_api:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: API_FOOTBALL_KEY
+        sync: false
+      - key: API_KEY
+        sync: false
+      - key: SPORTS_DB
+        value: sports.db
+      - key: MODEL_DIR
+        value: models

@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#08111f"><title>SmartBet AI — Sports Intelligence</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="app-shell">
+<aside class="sidebar">
+  <a class="brand" href="#home"><span class="brand-mark">S</span><span>SMARTBET<span class="brand-ai"> AI</span><small>SPORTS INTELLIGENCE</small></span></a>
+  <div class="side-label">WORKSPACE</div>
+  <button class="nav active" data-view="dashboard">▦ <span>Dashboard</span></button>
+  <button class="nav" data-view="predictions">◎ <span>Predictions</span></button>
+  <button class="nav" data-view="slip">▤ <span>Bet slip</span><b id="slip-count">0</b></button>
+  <button class="nav" data-view="results">◷ <span>Results tracker</span></button>
+  <div class="side-label sports-label">SPORTS</div>
+  <button class="sport-link selected" data-sport="All">◈ <span>All sports</span></button>
+  <button class="sport-link" data-sport="Basketball">🏀 <span>Basketball</span></button>
+  <button class="sport-link" data-sport="Football">⚽ <span>Football</span></button>
+  <div class="sidebar-bottom"><div class="status-dot"></div><div><strong>Demo mode</strong><small>Connect data APIs for live fixtures</small></div></div>
+</aside>
+<main class="main">
+<header class="topbar"><button class="mobile-brand">SMARTBET <em>AI</em></button><div class="breadcrumb">Workspace <span>/</span> <strong id="page-name">Dashboard</strong></div><div class="top-actions"><span class="live-pill"><i></i> MODEL ONLINE</span><button class="avatar">SB</button></div></header>
+<section class="content" id="dashboard-view">
+  <div class="welcome-row"><div><div class="eyebrow">SUNDAY, NOVEMBER 15, 2026</div><h1>Sports intelligence, <span>made clearer.</span></h1><p>Analyse matchups, compare markets and build a shortlist from one workspace.</p></div><button class="outline-btn" id="refresh-btn">↻ Refresh board</button></div>
+  <div class="notice"><span>ⓘ</span><div><strong>Prototype data is being displayed</strong><small>Fixtures, odds and confidence values below are illustrative examples, not live bookmaker prices or guaranteed predictions.</small></div><button id="dismiss-notice">×</button></div>
+  <div class="stats-grid"><article class="stat-card"><div class="stat-top">MATCHES ON BOARD <span>◫</span></div><strong id="match-total">06</strong><small>Across basketball & football</small></article><article class="stat-card"><div class="stat-top">SHORTLISTED PICKS <span>＋</span></div><strong id="pick-total">0</strong><small>Your current bet slip</small></article><article class="stat-card"><div class="stat-top">TRACKED RESULTS <span>◷</span></div><strong>—</strong><small>Results tracking not connected</small></article><article class="stat-card"><div class="stat-top">DATA CONNECTION <span>⌁</span></div><strong class="pending">Pending</strong><small>API keys required for live data</small></article></div>
+  <section class="panel api-football-panel" aria-labelledby="football-api-title">
+    <div class="panel-head"><div><h3 id="football-api-title">Premier League data</h3><p>API-Sports Football · League ID 39 · Season 2026</p></div><button class="outline-btn" id="load-epl-btn">Load league data</button></div>
+    <div class="api-endpoint"><code>GET /api/football/leagues?id=39&amp;season=2026</code><span id="epl-api-status">Waiting for API connection</span></div>
+    <div id="epl-league-result" class="league-result" aria-live="polite">Click “Load league data” to retrieve the league details from your secured API connection.</div>
+  </section>
+  <section class="panel api-football-panel" aria-labelledby="ml-title">
+    <div class="panel-head"><div><h3 id="ml-title">Machine-learning prediction engine</h3><p>Import completed results, train on your historical data, then request upcoming fixtures with model estimates.</p></div><span class="tag">ML MODEL</span></div>
+    <div class="analysis-form ml-controls">
+      <label>Competition<select id="ml-sport"><option value="nba">NBA</option><option value="ncaam">NCAA Men's Basketball</option><option value="ncaaw">NCAA Women's Basketball</option><option value="wnba">WNBA</option><option value="epl">English Premier League</option><option value="laliga">La Liga</option><option value="mls">MLS</option><option value="nfl">NFL</option><option value="mlb">MLB</option><option value="nhl">NHL</option></select></label>
+      <label>History to import (days)<input id="ml-days" type="number" min="1" max="3650" value="730"></label>
+      <label>API key (only if configured)<input id="ml-api-key" type="password" autocomplete="off" placeholder="Optional X-API-Key"></label>
+      <button class="primary-btn" id="ml-ingest">Import results</button>
+      <button class="outline-btn" id="ml-train">Train / validate model</button>
+      <button class="outline-btn" id="ml-upcoming">Load upcoming predictions</button>
+    </div>
+    <div id="ml-status" class="league-result" aria-live="polite">Model not trained yet. Import history first; training requires at least 200 usable completed games and both outcome classes in the validation period.</div>
+    <div id="ml-upcoming-list" class="league-result" aria-live="polite"></div>
+    <p class="coverage-note">The default feed is ESPN's unofficial public scoreboard. It may change and is not a licensed or guaranteed feed. API-key protection applies to data imports and training when API_KEY is configured.</p>
+  </section>
+  <section class="panel api-football-panel" aria-labelledby="analysis-title">
+    <div class="panel-head"><div><h3 id="analysis-title">Sports analysis engine</h3><p>Enter a completed match history, then analyse a matchup. NBA, NCAA and football are supported as separate sport labels.</p></div><span class="tag">LIVE API ENGINE</span></div>
+    <form id="game-entry-form" class="analysis-form">
+      <label>Sport<select name="sport"><option value="nba">NBA Basketball</option><option value="ncaa">NCAA Basketball</option><option value="soccer">Football</option></select></label>
+      <label>League<input name="league" placeholder="NBA, NCAA, Premier League"></label>
+      <label>Match date<input name="date" type="date" required></label>
+      <label>Home team<input name="home" placeholder="Home team" required></label>
+      <label>Away team<input name="away" placeholder="Away team" required></label>
+      <label>Home final score<input name="home_score" type="number" min="0" required></label>
+      <label>Away final score<input name="away_score" type="number" min="0" required></label>
+      <label>Home 1st-half points/goals<input name="home_first_half_score" type="number" min="0" placeholder="Optional"></label>
+      <label>Away 1st-half points/goals<input name="away_first_half_score" type="number" min="0" placeholder="Optional"></label>
+      <button class="primary-btn" type="submit">Save completed game</button>
+    </form>
+    <p id="game-entry-status" class="coverage-note" aria-live="polite">Game records are held in memory and reset when the server restarts.</p>
+    <div class="analysis-divider"></div>
+    <form id="match-analysis-form" class="analysis-form">
+      <label>Sport<select name="sport"><option value="nba">NBA Basketball</option><option value="ncaa">NCAA Basketball</option><option value="soccer">Football</option></select></label>
+      <label>Home team<input name="home" required placeholder="Home team"></label>
+      <label>Away team<input name="away" required placeholder="Away team"></label>
+      <label>Market<select name="market"><option value="winner">Match winner (Elo)</option><option value="total">Full-game total over/under</option><option value="first_half_total">First-half total over/under</option></select></label>
+      <label>Points/goals line<input name="line" type="number" step="0.5" placeholder="e.g. 109.5"></label>
+      <button class="primary-btn" type="submit">Analyse matchup</button>
+    </form>
+    <div id="match-analysis-result" class="league-result" aria-live="polite">Analysis results will appear here. Total-market estimates require at least five completed games in the selected sport; first-half markets also require first-half scores.</div>
+  </section>
+  <div class="section-heading"><div><h2>Prediction board</h2><p>Review sample markets and add selections to your slip.</p></div><div class="filters"><button class="filter active" data-filter="All">All</button><button class="filter" data-filter="Basketball">🏀 Basketball</button><button class="filter" data-filter="Football">⚽ Football</button></div></div>
+  <div class="match-list" id="match-list"></div>
+  <div class="bottom-grid"><section class="panel"><div class="panel-head"><div><h3>How SmartBet AI works</h3><p>A transparent workflow for evaluating a pick.</p></div><span class="tag">ANALYSIS FLOW</span></div><div class="steps"><div><b>01</b><strong>Collect</strong><small>Fixtures, odds and team statistics from connected providers.</small></div><div><b>02</b><strong>Evaluate</strong><small>Compare recent form, scoring trends and market prices.</small></div><div><b>03</b><strong>Rank</strong><small>Show estimated probability, confidence and data quality.</small></div></div></section><section class="panel api-panel"><div class="panel-head"><div><h3>Data integrations</h3><p>Connect providers to enable real analysis.</p></div><span class="tag amber">SETUP NEEDED</span></div><div class="api-row"><span class="api-icon">⚽</span><div><strong>API-Sports</strong><small>Football & basketball fixtures/statistics</small></div><em>Not connected</em></div><div class="api-row"><span class="api-icon">↗</span><div><strong>The Odds API</strong><small>Market odds where supported</small></div><em>Not connected</em></div><div class="api-row"><span class="api-icon">▤</span><div><strong>Supabase</strong><small>Saved picks & result history</small></div><em>Not connected</em></div></section></div>
+  <footer>SmartBet AI · Independent sports analysis prototype · Bet responsibly. No bet is guaranteed.</footer>
+</section>
+<section class="content hidden" id="slip-view"><div class="welcome-row"><div><div class="eyebrow">YOUR SELECTIONS</div><h1>Bet <span>slip builder.</span></h1><p>Review and copy your selections for manual entry on your bookmaker.</p></div><button class="outline-btn" id="clear-slip">Clear slip</button></div><div class="notice"><span>ⓘ</span><div><strong>Manual entry only</strong><small>This tool does not connect to SportyBet, place bets or verify bookmaker availability. Confirm every market and price on SportyBet before placing a bet.</small></div></div><div class="slip-panel" id="slip-items"></div><button class="primary-btn" id="copy-slip">Copy selections</button><p class="copy-feedback" id="copy-feedback"></p></section>
+<section class="content hidden" id="results-view"><div class="eyebrow">PERFORMANCE</div><h1>Results <span>tracker.</span></h1><p class="muted">Track picks after matches finish. Persistent automated result settlement will be enabled when a results provider and database are connected.</p><div class="empty-state"><div>◷</div><h3>No settled picks yet</h3><p>Add selections to your slip. Result tracking is not active in this demo.</p></div></section>
+<section class="content hidden" id="predictions-view"><div class="eyebrow">MODEL OUTPUT</div><h1>All <span>predictions.</span></h1><p class="muted">Browse the current illustrative prediction board. Live statistical modelling requires connected data sources.</p><div class="match-list" id="prediction-list"></div></section>
+</main></div>
+<script src="app.js"></script>
+</body></html>
